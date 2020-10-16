@@ -21,7 +21,7 @@ contract SimpleBank {
 
     /* Let's make sure everyone knows who owns the bank. Use the appropriate keyword for this*/
     address owner;
-    
+
     //
     // Events - publicize actions to external listeners
     // ( I added dates to these events)
@@ -57,7 +57,6 @@ contract SimpleBank {
     /* Use the appropriate global variable to get the sender of the transaction */
     constructor() public {
         /* Set the owner to the creator of this contract */
-//        string memory ContractOwner = "Jason";
         owner = address(this);
     }
 
@@ -74,7 +73,7 @@ contract SimpleBank {
     /// @return The balance of the user
     // A SPECIAL KEYWORD prevents function from editing state variables;
     // allows function to run locally/off blockchain
-    function getBalance() public view returns (uint) {
+    function getBalance() public view returns (uint256) {
         /* Get the balance of the sender of this transaction */
         return AcctBalance[msg.sender];
     }
@@ -97,7 +96,7 @@ contract SimpleBank {
     
     
     
-    function deposit(uint256 _depositAmt) public returns (uint) {
+    function deposit(uint256 _depositAmt) public returns (uint256) {
         /* Add the amount to the user's balance, call the event associated with a deposit,
           then return the balance of the user */
         AcctBalance[msg.sender] += _depositAmt;
@@ -111,7 +110,7 @@ contract SimpleBank {
     // @param withdrawAmount amount you want to withdraw
     // @return The balance remaining for the user
     // Emit the appropriate event    
-    function withdraw(uint _withdrawAmount) public returns (uint) {
+    function withdraw(uint _withdrawAmount) public returns (uint256) {
         /* If the sender's balance is at least the amount they want to withdraw,
            Subtract the amount from the sender's balance, and try to send that amount of ether
            to the user attempting to withdraw. 
