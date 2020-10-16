@@ -11,7 +11,6 @@ contract SimpleBank {
     //
     // State variables
     //
-    bool isEnrolled;
 
     /* Fill in the keyword. Hint: We want to protect our users balance from other contracts*/
   //  mapping (address => uint) balances;
@@ -91,6 +90,7 @@ contract SimpleBank {
     function enroll() public returns (bool){
         enrolled[msg.sender] = true; 
         emit LogEnrolled( msg.sender);
+        return enrolled[msg.sender];
     }
 
     /// @notice Deposit ether into bank
