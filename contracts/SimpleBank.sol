@@ -14,10 +14,10 @@ contract SimpleBank {
 
     /* Fill in the keyword. Hint: We want to protect our users balance from other contracts*/
   //  mapping (address => uint) balances;
-    mapping(address => uint) AcctBalance;    
+    mapping(address => uint) balances;    
 
     /* Fill in the keyword. We want to create a getter function and allow contracts to be able to see if a user is enrolled.  */
-    mapping (address => bool) enrolled;
+    mapping (address => bool) public enrolled;
 
     /* Let's make sure everyone knows who owns the bank. Use the appropriate keyword for this*/
     address owner;
@@ -29,13 +29,13 @@ contract SimpleBank {
     /* Add an argument for this event, an accountAddress */
     event LogEnrolled(
 //        uint256 date,
-        address from
+        address accountAddress
         );
 
     /* Add 2 arguments for this event, an accountAddress and an amount */
     event LogDepositMade(
   //      uint256 date,
-        address from, 
+        address accountAddress, 
         uint amount
         );
 
@@ -43,9 +43,8 @@ contract SimpleBank {
     /* Add 3 arguments for this event, an accountAddress, withdrawAmount and a newBalance */
 
     event LogWithdrawal(
-//        uint256 date,
-        address from, 
-        uint amount,
+        address accountAddress, 
+        uint withdrawAmount,
         uint newBalance
         );
 
@@ -65,6 +64,7 @@ contract SimpleBank {
     // Typically, called when invalid data is sent
     // Added so ether sent to this contract is reverted if the contract fails
     // otherwise, the sender's money is transferred to contract
+    
     fallback() external payable {
         revert();
     }
@@ -75,7 +75,7 @@ contract SimpleBank {
     // allows function to run locally/off blockchain
     function getBalance() public view returns (uint) {
         /* Get the balance of the sender of this transaction */
-        return AcctBalance[msg.sender];
+        return balances[msg.sender];
     }
     function getEnrolledStatus() public view returns (bool) {
         /* Get the balance of the sender of this transaction */
@@ -106,10 +106,10 @@ contract SimpleBank {
         /* Add the amount to the user's balance, call the event associated with a deposit,
           then return the balance of the user */
         if (enrolled[msg.sender] == true) {
-        AcctBalance[msg.sender] += _depositAmt;
+        balances[msg.sender] += _depositAmt;
         emit LogDepositMade( msg.sender, _depositAmt);
         }
-        return(AcctBalance[msg.sender]);
+        return(balances[msg.sender]);
     }
     
 
@@ -127,21 +127,12 @@ contract SimpleBank {
         require (enrolled[msg.sender] == true);
 
         // Check withdrawl amount 
-        // 1. this makes the transaction fail if the 
-        require(_withdrawAmount <= AcctBalance[msg.sender]);
+        require(_withdrawAmount <= balances[msg.sender]);
 
-        // 2. this line would limit withdrawls to the balance in the account
-        // _withdrawAmount = min(_withdrawAmount, AcctBalance[msg.sender]);
-
-        AcctBalance[msg.sender] -= _withdrawAmount;
-        emit LogWithdrawal( msg.sender, _withdrawAmount, AcctBalance[msg.sender]);
-        return(AcctBalance[msg.sender]);
+        balances[msg.sender] -= _withdrawAmount;
+        emit LogWithdrawal( msg.sender, _withdrawAmount, balances[msg.sender]);
+        return(balances[msg.sender]);
     }
-    
 
-    // @dev Returns the smallest of two numbers.
-    function min(uint a, uint b) internal pure returns (uint) {
-        return a < b ? a : b;
-    }
     
 }
