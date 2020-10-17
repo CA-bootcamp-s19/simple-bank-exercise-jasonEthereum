@@ -93,17 +93,28 @@ contract SimpleBank {
     // Users should be enrolled before they can make deposits
     
     
-    
+/*
     function deposit(uint _depositAmt) public returns (uint) {
-        /* Add the amount to the user's balance, call the event associated with a deposit,
-          then return the balance of the user */
+        // Add the amount to the user's balance, call the event associated with a deposit,
+        // then return the balance of the user 
         if (enrolled[msg.sender] == true) {
         balances[msg.sender] += _depositAmt;
         emit LogDepositMade( msg.sender, _depositAmt);
         }
         return balances[msg.sender];
     }
-    
+*/
+
+
+function deposit() public payable returns (uint) {
+        /* Add the amount to the user's balance, call the event associated with a deposit,
+          then return the balance of the user */
+          require(enrolled[msg.sender]);
+          uint newBalance  = balances[msg.sender] + msg.value;
+          balances[msg.sender] = newBalance;
+          emit LogDepositMade(msg.sender, msg.value);
+          return balances[msg.sender];
+    }    
 
     // @notice Withdraw ether from bank
     // @dev This does not return any excess ether sent to it
