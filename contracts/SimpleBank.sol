@@ -101,7 +101,7 @@ contract SimpleBank {
         balances[msg.sender] += _depositAmt;
         emit LogDepositMade( msg.sender, _depositAmt);
         }
-        return(balances[msg.sender]);
+        return balances[msg.sender];
     }
     
 
@@ -119,7 +119,7 @@ contract SimpleBank {
         require(_withdrawAmount <= balances[msg.sender]);
         balances[msg.sender] -= _withdrawAmount;
         emit LogWithdrawal( msg.sender, _withdrawAmount, balances[msg.sender]);
-        return(balances[msg.sender]);
+        return balances[msg.sender];
     }
 
 
